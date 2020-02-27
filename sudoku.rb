@@ -22,6 +22,16 @@ class Sudoku
   def solve
   end
 
+  def find_empty_cell
+    game_board.each_with_index do |row, rowIndex|
+      row.each_with_index do |col, colIndex|
+        if col == 0
+          return [rowIndex, colIndex]
+        end
+      end
+      return false
+  end
+
   # Returns a boolean indicating whether or not the provided board is solved.
   def finished?
   end
