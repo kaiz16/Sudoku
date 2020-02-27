@@ -29,7 +29,8 @@ class Sudoku
           return [rowIndex, colIndex]
         end
       end
-      return false
+    end
+    return false
   end
 
   # Returns a boolean indicating whether or not the provided board is solved.
