@@ -34,6 +34,8 @@ class Sudoku
 
   # Returns a boolean indicating whether or not the provided board is solved.
   def finished?
+    return false if game_board.any?{|row| row.include?(0)}
+    return true
   end
 
   # Returns original state of the board
