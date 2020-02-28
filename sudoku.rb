@@ -33,6 +33,36 @@ class Sudoku
     return false
   end
 
+  # Returns row of the given cell
+  def find_row(rowIndex)
+    return game_board[rowIndex]
+  end
+
+  # Returns column of the given cell
+  def find_column(rowIndex, colIndex, column = [])
+    # Base case. Will return column once it's length equals to 9
+    return column if column.length == 9
+    column << game_board[rowIndex][colIndex]
+    # Calling recursive method on the y axis (Both up and down)
+        find_column(rowIndex - 1, colIndex, column) || 
+        find_column(rowIndex + 1, colIndex, column)
+  end
+
+  # Returns cell's 3x3 square or grid
+  def find_square(row_index, col_index)
+    grid = []
+    # Divide and multiply by three to make sure both row and column result at the 0th index of the grid.
+    # For ex: If we want 3x3 grid of a cell that is in row 5 and column 6. Row would be at 3 and column would be at 6.
+    row = (row_index / 3) * 3
+    col = (col_index / 3) * 3
+    for i in row..row + 2
+        for j in col..col + 2
+          grid << game_board[i][j]
+        end
+    end
+    return grid
+  end
+
   # Returns a boolean indicating whether or not the provided board is solved.
   def finished?
     return false if game_board.any?{|row| row.include?(0)}
