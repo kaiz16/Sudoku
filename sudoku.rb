@@ -47,7 +47,7 @@ class Sudoku
         end
       end
       # This condition only gets executed if we have no possible number
-      until !backtrack[[row, col]].empty?
+      while backtrack[[row, col]].empty?
         game_board[row][col] = 0
         backtrack.delete([row,col])
         row = backtrack.to_a.last[0][0]
