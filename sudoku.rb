@@ -20,6 +20,27 @@ class Sudoku
   end
 
   def solve
+    # Pseudocode
+    # 1 - Go through each row and column
+    # 2 - Find an empty space
+    # 3 - Make an empty array that will hold all possible numbers
+    # 5 - Loop from 1 to 9
+    #  5a - Push it to an array in step 3 if a number doesn't present in row, column and square
+    # 6 - Add it to an empty space if we only have one possible number, else leave it.
+    # 7 - Repeat until board is full
+    while !finished?
+      game_board.each_with_index do |row, row_index|
+        row.each_with_index do |col, col_index|
+          if col == 0
+            possible_entries = []
+            (1..9).each do |num|
+              possible_entries << num if !find_row(row_index).include?(num) && !find_column(row_index, col_index).include?(num) && !find_square(row_index, col_index).include?(num)
+            end
+            game_board[row_index][col_index] = possible_entries[0] if possible_entries.length == 1
+          end 
+        end
+      end    
+   end
   end
 
   def find_empty_cell
@@ -107,6 +128,5 @@ class Sudoku
 end
 
 puzzle = "1-58-2----9--764-52--4--819-19--73-6762-83-9-----61-5---76---3-43--2-5-16--3-89--"
-
 game = Sudoku.new(puzzle)
 puts game
