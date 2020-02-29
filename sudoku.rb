@@ -21,26 +21,41 @@ class Sudoku
 
   def solve
     # Pseudocode
-    # 1 - Go through each row and column
+    # 0 - Make a hash that will keep track of all possible numbers in each row and column. Let's just call it backtrack.
+    # 1 - Loop while game hasn't finished
     # 2 - Find an empty space
-    # 3 - Make an empty array that will hold all possible numbers
+    # 3 - Add it to the backtrack with row and column as key and empty array as value.
     # 5 - Loop from 1 to 9
-    #  5a - Push it to an array in step 3 if a number doesn't present in row, column and square
-    # 6 - Add it to an empty space if we only have one possible number, else leave it.
-    # 7 - Repeat until board is full
+    #  5a - Push it to the value (array) in step 3 if a number doesn't present in row, column and square
+    # 6 - Make a condition that runs when we have no possible number for the cell.
+      # 6a - Set the row and column of board to be empty (This resets the cell)
+      # 6b - Delete the key and value from the hash (Because we set and added it to backtrack in step 3)
+      # 6c - Set the row, column to backtrack's last row and column. 
+      # 6d - Repeat until we have at least one possible number.
+    # 7 - Set board's empty cell to the first item of the possible numbers. (board[row][col] = possible numbers's first item)
+    # 8 - Delete first item of the possible numbers.
+    # 9 - Repeat until board is full
+    backtrack = {} 
     while !finished?
-      game_board.each_with_index do |row, row_index|
-        row.each_with_index do |col, col_index|
-          if col == 0
-            possible_entries = []
-            (1..9).each do |num|
-              possible_entries << num if is_safe?(row_index,col_index,num)
-            end
-            game_board[row_index][col_index] = possible_entries[0] if possible_entries.length == 1
-          end 
+      empty_space = find_empty_cell()
+      row = empty_space[0]
+      col = empty_space[1]
+      backtrack[[row, col]] = []
+      (1..9).each do |number|
+        if is_safe?(row,col,number)
+          backtrack[[row, col]] << number
         end
-      end    
-   end
+      end
+      # This condition only gets executed if we have no possible number
+      until !backtrack[[row, col]].empty?
+        game_board[row][col] = 0
+        backtrack.delete([row,col])
+        row = backtrack.to_a.last[0][0]
+        col = backtrack.to_a.last[0][1]
+      end
+        game_board[row][col] = backtrack[[row, col]].first
+        backtrack[[row,col]].delete(backtrack[[row, col]].first)
+    end
   end
 
   # Returns true if it's safe to place to a number
@@ -131,7 +146,3 @@ class Sudoku
     return output
   end
 end
-
-puzzle = "1-58-2----9--764-52--4--819-19--73-6762-83-9-----61-5---76---3-43--2-5-16--3-89--"
-game = Sudoku.new(puzzle)
-puts game
