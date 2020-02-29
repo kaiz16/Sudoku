@@ -34,13 +34,18 @@ class Sudoku
           if col == 0
             possible_entries = []
             (1..9).each do |num|
-              possible_entries << num if !find_row(row_index).include?(num) && !find_column(row_index, col_index).include?(num) && !find_square(row_index, col_index).include?(num)
+              possible_entries << num if is_safe?(row_index,col_index,num)
             end
             game_board[row_index][col_index] = possible_entries[0] if possible_entries.length == 1
           end 
         end
       end    
    end
+  end
+
+  # Returns true if it's safe to place to a number
+  def is_safe?(row_index, col_index, number)
+    return !find_row(row_index).include?(number) && !find_column(row_index, col_index).include?(number) && !find_square(row_index, col_index).include?(number)
   end
 
   def find_empty_cell
